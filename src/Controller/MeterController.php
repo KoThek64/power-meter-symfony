@@ -48,9 +48,30 @@ final class MeterController extends AbstractController
             return $this->json(['error' => (string) $errors], 400);
         }
 
-        $em->persist($meter);
-        $em->flush();
+        try {
+            $em->persist($meter);
+            $em->flush();
+        } catch (\Exception){
+            return $this->json(['error' => 'Une erreur s\'est produite pendant l\'ajout à la BD'], 500);
+        }
 
         return $this->json($meter, 201);
+    }
+
+    #[Route('/api/meter/{id}', methods:['DELETE'])]
+    public function delete(EntityManagerInterface $em, int $id, MeterRepository $meterRepo): JsonResponse{
+        $val = $meterRepo->find($id);
+        if ($val === null){
+            return $this->json(['error' => 'l\'id ne correspond pas'], 404);
+        }
+
+        try {
+            $em->remove($val);
+            $em->flush();
+        } catch (\Exception){
+            return $this->json(['error' => 'Une erreur s\'est produite lors de la suppression dans la BD'], 500);
+        }
+
+        return $this->json(['OK' => 'La suppression s\'est bien passée']);
     }
 }

@@ -63,9 +63,31 @@ final class ReadingController extends AbstractController
             return $this->json(['error' => (string) $errors], 400);
         }
 
-        $em->persist($reading);
-        $em->flush();
+        try{
+            $em->persist($reading);
+            $em->flush();
+        } catch (\Exception){
+            return $this->json(['error' => 'Une erreur s\'est produite pendant l\'ajout dans la BD'], 500);
+        }
 
         return $this->json($reading, 201);
+    }
+
+    #[Route('/api/reading/{id}', methods: ['DELETE'])]
+    public function delete(EntityManagerInterface $em, int $id, ReadingRepository $readingRepo) : JsonResponse{
+        $val = $readingRepo->find($id);
+
+        if ($val === null){
+            return $this->json(['error' => 'Aucun reading trouvé avec cet id'], 404);
+        }
+
+        try {
+            $em->remove($val);
+            $em->flush();
+        } catch (\Exception) {
+            return $this->json(['error' => 'Erreur lors de la suppression en BD'], 500);
+        }
+
+        return $this->json(['OK' => 'Suppression réalisé avec succès']);
     }
 }
