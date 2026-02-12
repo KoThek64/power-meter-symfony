@@ -25,7 +25,7 @@ class Reading
     #[ORM\ManyToOne(inversedBy: 'readings')]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank]
-    private ?meter $meter = null;
+    private ?Meter $meter = null;
 
     public function getId(): ?int
     {

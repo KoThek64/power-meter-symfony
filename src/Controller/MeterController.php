@@ -21,7 +21,7 @@ final class MeterController extends AbstractController
     }
 
     #[Route('/meter/{id}', methods: ['GET'])]
-    public function show(int $id, MeterRepository $meterRepo)
+    public function show(int $id, MeterRepository $meterRepo): JsonResponse
     {
         $val = $meterRepo->find($id);
         if ($val === null) {
@@ -31,7 +31,7 @@ final class MeterController extends AbstractController
     }
 
     #[Route('/api/meters', methods: ['POST'])]
-    public function add(Request $request, EntityManagerInterface $em, ValidatorInterface $validator)
+    public function add(Request $request, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse
     {
         $val = $request->toArray();
         if (!isset($val['serialNumber'], $val['location'])) {

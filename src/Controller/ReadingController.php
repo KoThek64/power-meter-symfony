@@ -22,7 +22,7 @@ final class ReadingController extends AbstractController
     }
 
     #[Route('/api/meter/{id}/reading', methods: ['GET'])]
-    public function show(MeterRepository $meterRepo, int $id)
+    public function show(MeterRepository $meterRepo, int $id): JsonResponse
     {
         $meter = $meterRepo->find($id);
 
@@ -40,7 +40,7 @@ final class ReadingController extends AbstractController
     }
 
     #[Route('/api/reading', methods: ['POST'])]
-    public function add(Request $request, EntityManagerInterface $em, MeterRepository $meterRepo, ValidatorInterface $validator)
+    public function add(Request $request, EntityManagerInterface $em, MeterRepository $meterRepo, ValidatorInterface $validator): JsonResponse
     {
         $val = $request->toArray();
         if (!isset($val['meter_id'], $val['value'])) {
